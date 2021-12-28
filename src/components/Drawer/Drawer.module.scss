@@ -1,0 +1,130 @@
+.drawer {
+    position: absolute;
+    width: 420px;
+    height: 100%;
+    right: 0;
+    background-color: #ffffff;
+    box-shadow: -10px 4px 24px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+  
+    h2 {
+      display: flex;
+      justify-content: space-between;
+      margin: 0;
+      margin-bottom: 30px;
+      
+      img {
+        cursor: pointer;
+      }
+    }
+  
+    .items {
+      flex: 1;
+      overflow: auto;
+      margin-bottom: 40px;
+    }
+  
+    .cartItem {
+      display: flex;
+      align-items: center;
+      padding: 20px;
+      margin-bottom: 20px;
+      overflow: hidden;
+      border: 1px solid #f3f3f3;
+      border-radius: 20px;
+  
+      .cartItemImg {
+        height: 70px;
+        width: 70px;
+        background-size: contain;
+        background-position: 0 10px;
+        background-repeat: no-repeat;
+        margin-right: 20px;
+      }
+  
+      .btnRemove {
+        margin-right: 20px;
+        opacity: 0.5;
+        cursor: pointer;
+        transition: opacity 0.15s ease-in-out;
+        &:hover {
+          opacity: 1;
+        }
+      }
+  
+      p {
+        font-size: 16px;
+        margin: 0;
+      }
+  
+      b {
+        font-size: 14px;
+      }
+    }
+  
+    .cartTotalBlock {
+      ul {
+        margin-bottom: 40px;
+      }
+  
+      li {
+        display: flex;
+        align-items: flex-end;
+        margin-bottom: 20px;
+      }
+  
+      div {
+        flex: 1;
+        height: 1px;
+        border-bottom: 1px dashed #dfdfdf;
+        position: relative;
+        top: -4px;
+        margin: 0 7px;
+      }
+  
+      .greenButton {
+        position: relative;
+        width: 100%;
+        height: 55px;
+        background: #9dd558;
+        border-radius: 18px;
+        border: 0;
+        color: #ffffff;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.2s ease-in-out;
+  
+        &:hover {
+          background: lighten(#9dd558, 5%);
+          img {
+            transform: translateX(5px);
+          }
+        }
+  
+        &:active {
+          background: darken(#9dd558, 5%);
+        }
+  
+        img {
+          position: absolute;
+          top: 20px;
+          right: 30px;
+          transition: transform 0.15s ease-in-out;
+        }
+      }
+    }
+  }
+  
+  .overlay {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.1);
+    z-index: 1;
+  }

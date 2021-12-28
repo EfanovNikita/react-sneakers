@@ -1,0 +1,33 @@
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 40px;
+    border-bottom: 1px solid #eaeaea;
+    
+    .headerLeft {
+      display: flex;
+      align-items: center;
+      
+      h3, p {
+        margin: 0;
+      }
+  
+      p {
+        opacity: 0.5;
+      }
+  
+      img {
+        margin-right: 15px;
+      }
+    }
+  
+    .headerRight {
+      display: flex;
+  
+      li:first-child {
+        margin-right: 30px;
+  
+      }
+    }
+}
