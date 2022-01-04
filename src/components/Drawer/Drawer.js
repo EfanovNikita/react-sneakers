@@ -1,10 +1,10 @@
 import style from './Drawer.module.scss';
 
-function Drawer() {
+function Drawer({ closeCart }) {
     return (
         <div className={style.overlay}>
             <div className={style.drawer}>
-                <h2>Корзина <img className='' src='/img/btn-remove.svg' alt='remove' /></h2>
+                <h2>Корзина <img className='' onClick={closeCart} src='/img/btn-remove.svg' alt='close' /></h2>
 
                 <div className={style.items}>
                     <div className={style.cartItem}>

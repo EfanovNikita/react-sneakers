@@ -1,6 +1,6 @@
 import style from './Header.module.scss';
 
-function Header() {
+function Header({ openCart }) {
     return (
         <header>
             <div className={style.headerLeft}>
@@ -11,7 +11,7 @@ function Header() {
                 </div>
             </div>
             <ul className={style.headerRight}>
-                <li>
+                <li onClick={openCart}>
                     <img width={18} height={18} src='/img/cart.svg' alt="cart" />
                     <span>7655 руб.</span>
                 </li>
