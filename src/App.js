@@ -1,45 +1,37 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from './components/Header/Header';
 import Drawer from './components/Drawer/Drawer';
 import Card from './components/Card/Card';
 
 import './index.scss';
 
-const arr = [
-  {
-    name: 'Мужские кроссовки Nike Blazer Mid Suede',
-    url: '/img/sneakers/1.jpg',
-    price: 10565
-  },
-  {
-    name: 'Мужские кроссовки Nike Blazer Mid Suede',
-    url: '/img/sneakers/2.jpg',
-    price: 10565
-  },
-  {
-    name: 'Мужские кроссовки Nike Blazer Mid Suede',
-    url: '/img/sneakers/3.jpg',
-    price: 10565
-  },
-  {
-    name: 'Мужские кроссовки Nike Blazer Mid Suede',
-    url: '/img/sneakers/4.jpg',
-    price: 10565
-  },
-  {
-    name: 'Мужские кроссовки Nike Blazer Mid Suede',
-    url: '/img/sneakers/5.jpg',
-    price: 10565
-  },
-]
-
 function App() {
   const [cartOpened, setCartOpened] = useState(false);
+  const [cartItems, setCartItems] = useState([]);
+  const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    fetch('https://61d422528df81200178a8ac2.mockapi.io/items').then(res => {
+      return res.json()
+    }).then(json => {
+      setItems(json);
+    })
+  }, []);
+
+  const addInCart = obj => {
+    setCartItems(prev => {
+      for (let i = 0; i < prev.length; i++) {
+        if (obj.url == prev[i].url) {
+          return [...prev]
+        }
+      }
+      return [...prev, obj]
+    });
+  }
 
   return (
     <div className="wrapper">
-      {cartOpened && <Drawer closeCart={() => setCartOpened(false)} />}
+      {cartOpened && <Drawer closeCart={() => setCartOpened(false)} items={cartItems} />}
       <Header openCart={() => setCartOpened(true)} />
 
       <div className='content'>
@@ -52,7 +44,12 @@ function App() {
         </div>
 
         <div className='sneakers'>
-          {arr.map(obj => <Card url={obj.url} title={obj.name} price={obj.price} key={obj.url} />)}
+          {items.map(item =>
+            <Card url={item.url}
+              title={item.name}
+              price={item.price}
+              key={item.url}
+              onPlus={obj => addInCart(obj)} />)}
         </div>
       </div>
     </div>

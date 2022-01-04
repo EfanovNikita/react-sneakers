@@ -1,28 +1,23 @@
 import style from './Drawer.module.scss';
 
-function Drawer({ closeCart }) {
+function Drawer({ closeCart, items }) {
+    console.log(items);
     return (
         <div className={style.overlay}>
             <div className={style.drawer}>
                 <h2>Корзина <img className='' onClick={closeCart} src='/img/btn-remove.svg' alt='close' /></h2>
 
                 <div className={style.items}>
-                    <div className={style.cartItem}>
-                        <div style={{ backgroundImage: 'url(/img/sneakers/1.jpg)' }} className='cartItemImg'></div>
-                        <div>
-                            <p>Мужские кроссовки Nike Blazer Mid Suede</p>
-                            <b>10 565 руб.</b>
+                    {items.map(obj => (
+                        <div className={style.cartItem} key={obj.url}>
+                            <div style={{ backgroundImage: `url(${obj.url})` }} className={style.cartItemImg}></div>
+                            <div>
+                                <p>{obj.title}</p>
+                                <b>{obj.price} руб.</b>
+                            </div>
+                            <img className={style.btnRemove} src='/img/btn-remove.svg' alt='remove' />
                         </div>
-                        <img className={style.btnRemove} src='/img/btn-remove.svg' alt='remove' />
-                    </div>
-                    <div className={style.cartItem}>
-                        <div style={{ backgroundImage: 'url(/img/sneakers/2.jpg)' }} className='cartItemImg'></div>
-                        <div>
-                            <p>Мужские кроссовки Nike Blazer Mid Suede</p>
-                            <b>10 565 руб.</b>
-                        </div>
-                        <img className={style.btnRemove} src='/img/btn-remove.svg' alt='remove' />
-                    </div>
+                    ))}
                 </div>
 
                 <div className={style.cartTotalBlock}>
