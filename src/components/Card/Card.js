@@ -1,9 +1,11 @@
+import { useState } from 'react';
 import style from './Card.module.scss';
 
 
-function Card({url, title, price}) {
-    const onClickButton = () => {
-        alert(1);
+function Card({ url, title, price }) {
+    const [isAdded, setIsAdded] = useState(false);
+    const onClickPlus = () => {
+        setIsAdded(!isAdded);
     }
 
     return (
@@ -18,9 +20,7 @@ function Card({url, title, price}) {
                     <span>Цена:</span>
                     <b>{`${price} руб.`}</b>
                 </div>
-                <button onClick={onClickButton}>
-                    <img width={11} height={11} src='/img/plus.svg' alt='plus' />
-                </button>
+                <img onClick={onClickPlus} src={isAdded ? '/img/btn-checked.svg' : '/img/btn-plus.svg'} alt='plus' />
             </div>
         </div>
     )
