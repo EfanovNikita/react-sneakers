@@ -4,6 +4,7 @@ import Drawer from './components/Drawer/Drawer';
 import Card from './components/Card/Card';
 
 import './index.scss';
+import axios from 'axios';
 
 function App() {
   const [cartOpened, setCartOpened] = useState(false);
@@ -12,22 +13,33 @@ function App() {
   const [searchValue, setSearchValue] = useState('');
 
   useEffect(() => {
-    fetch('https://61d422528df81200178a8ac2.mockapi.io/items').then(res => {
-      return res.json()
-    }).then(json => {
-      setItems(json);
+    axios.get('https://61d422528df81200178a8ac2.mockapi.io/items').then(res => {
+      setItems(res.data);
+    })
+    axios.get('https://61d422528df81200178a8ac2.mockapi.io/cart').then(res => {
+      setCartItems(res.data);
     })
   }, []);
 
-  const addInCart = obj => {
-    setCartItems(prev => {
-      for (let i = 0; i < prev.length; i++) {
-        if (obj.url == prev[i].url) {
-          return [...prev]
-        }
+  const addToCart = obj => {
+    for (let i = 0; i < cartItems.length; i++) {
+      if (obj.url == cartItems[i].url) {
+        return
       }
-      return [...prev, obj]
+    }
+    axios.post('https://61d422528df81200178a8ac2.mockapi.io/cart', obj).then(res => {
+      axios.get('https://61d422528df81200178a8ac2.mockapi.io/cart').then(res => {
+        setCartItems(res.data);
+      })
     });
+  }
+
+  const onRemoveItem = id => {
+    axios.delete(`https://61d422528df81200178a8ac2.mockapi.io/cart/${id}`).then(res => {
+      axios.get('https://61d422528df81200178a8ac2.mockapi.io/cart').then(res => {
+        setCartItems(res.data);
+      })
+    })
   }
 
   const onChangeSearchValue = event => {
@@ -36,7 +48,7 @@ function App() {
 
   return (
     <div className="wrapper">
-      {cartOpened && <Drawer closeCart={() => setCartOpened(false)} items={cartItems} />}
+      {cartOpened && <Drawer closeCart={() => setCartOpened(false)} onRemove={onRemoveItem} items={cartItems} />}
       <Header openCart={() => setCartOpened(true)} />
 
       <div className='content'>
@@ -51,13 +63,14 @@ function App() {
 
         <div className='sneakers'>
           {items
-            .filter(item => item.title.toLowerCase().includes(searchValue.toLowerCase()))
-            .map(item =>
+            .filter(item => item.name.toLowerCase().includes(searchValue.toLowerCase()))
+            .map((item, index) =>
               <Card url={item.url}
                 title={item.name}
                 price={item.price}
                 key={item.url}
-                onPlus={obj => addInCart(obj)} />)}
+                //id={item.url}
+                onPlus={obj => addToCart(obj)} />)}
         </div>
       </div>
     </div>

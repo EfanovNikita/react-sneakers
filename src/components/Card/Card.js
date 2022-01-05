@@ -2,7 +2,7 @@ import { useState } from 'react';
 import style from './Card.module.scss';
 
 
-function Card({ url, title, price, onPlus }) {
+function Card({ url, title, price, id, onPlus }) {
     const [isAdded, setIsAdded] = useState(false);
     const onClickPlus = () => {
         onPlus({url, title, price})
