@@ -83,42 +83,73 @@
         top: -4px;
         margin: 0 7px;
       }
-  
-      .greenButton {
-        position: relative;
-        width: 100%;
-        height: 55px;
-        background: #9dd558;
-        border-radius: 18px;
-        border: 0;
-        color: #ffffff;
-        font-size: 16px;
-        font-weight: 500;
-        cursor: pointer;
-        transition: background 0.2s ease-in-out;
-  
-        &:hover {
-          background: lighten(#9dd558, 5%);
-          img {
-            transform: translateX(5px);
-          }
-        }
-  
-        &:active {
-          background: darken(#9dd558, 5%);
-        }
-  
-        img {
-          position: absolute;
-          top: 20px;
-          right: 30px;
-          transition: transform 0.15s ease-in-out;
-        }
+    }
+
+    .cartEmpty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      text-align: center;
+
+      .cartImg {
+        width: 120px;
+        height: 120px;
+        margin-bottom: 20px;
+      }
+
+      p {
+        opacity: 0.6;
+      }
+
+      h2 {
+        margin: 0;
       }
     }
+
+    .greenButton {
+      position: relative;
+      width: 100%;
+      height: 55px;
+      background: #9dd558;
+      border-radius: 18px;
+      border: 0;
+      color: #ffffff;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s ease-in-out;
+
+      &:hover {
+        background: lighten(#9dd558, 5%);
+        img {
+          transform: translateX(5px);
+        }
+        .leftArrow {
+          transform: translateX(-5px) rotate(180deg);
+        }
+      }
+
+      &:active {
+        background: darken(#9dd558, 5%);
+      }
+
+      img {
+        position: absolute;
+        top: 20px;
+        right: 30px;
+        transition: transform 0.15s ease-in-out;
+      }
+
+      .leftArrow {
+        transform: rotate(180deg);
+        left: 30px;
+      }
   }
+}
   
-  .overlay {
+.overlay {
     position: absolute;
     top: 0;
     left: 0;
@@ -126,4 +157,4 @@
     height: 100%;
     background-color: rgba(0, 0, 0, 0.1);
     z-index: 1;
-  }
+}
