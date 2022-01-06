@@ -25,12 +25,14 @@ header {
     .headerRight {
       display: flex;
   
-      li:first-child {
-        margin-right: 30px;
+      li {
+        margin-right: 20px;
         cursor: pointer;
-        
+      }
+      
+      li:first-child { 
         img {
-          margin-right: 30px;
+          margin-right: 20px;
         }
       }
     }
