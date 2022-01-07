@@ -14,27 +14,33 @@ function App() {
   const [items, setItems] = useState([]);
   const [searchValue, setSearchValue] = useState('');
   const [favoriteItems, setFavoriteItems] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    axios.get('https://61d422528df81200178a8ac2.mockapi.io/items').then(res => {
-      setItems(res.data);
-    })
-    axios.get('https://61d422528df81200178a8ac2.mockapi.io/cart').then(res => {
-      setCartItems(res.data);
-    })
-    axios.get('https://61d422528df81200178a8ac2.mockapi.io/favorites').then(res => {
-      setFavoriteItems(res.data);
-    })
+    async function fetchData() {
+      setIsLoading(true);
+      const itemsResponse = await axios.get('https://61d422528df81200178a8ac2.mockapi.io/items');
+      const cartResponse = await axios.get('https://61d422528df81200178a8ac2.mockapi.io/cart');
+      const favoriteResponse = await axios.get('https://61d422528df81200178a8ac2.mockapi.io/favorites');
+
+      setCartItems(cartResponse.data);
+      setFavoriteItems(favoriteResponse.data);
+      setItems(itemsResponse.data);
+
+      setIsLoading(false);
+    }
+    fetchData();
   }, []);
 
   const addToCart = obj => {
-    if (cartItems.find(item => item.url == obj.url)) {
+    let findCartItem = cartItems.find(item => item.url == obj.url);
+    if (findCartItem) {
+      setCartItems(prev => prev.filter(item => item.url !== obj.url));
+      axios.delete(`https://61d422528df81200178a8ac2.mockapi.io/cart/${findCartItem.id}`)
       return
     }
     axios.post('https://61d422528df81200178a8ac2.mockapi.io/cart', obj).then(res => {
-      axios.get('https://61d422528df81200178a8ac2.mockapi.io/cart').then(res => {
-        setCartItems(res.data);
-      })
+      setCartItems(prev => [...prev, res.data]);
     });
   }
 
@@ -58,9 +64,7 @@ function App() {
       })
     } else {
       axios.post('https://61d422528df81200178a8ac2.mockapi.io/favorites', obj).then(res => {
-        axios.get('https://61d422528df81200178a8ac2.mockapi.io/favorites').then(res => {
-          setFavoriteItems(res.data)
-        })
+        setFavoriteItems(prev => [...prev, res.data]);
       })
     }
   }
@@ -73,14 +77,18 @@ function App() {
       <Routes>
         <Route exact path="/" element={
           <Home items={items}
+            cartItems={cartItems}
+            favoriteItems={favoriteItems}
             searchValue={searchValue}
             addToCart={addToCart}
             onAddFavorite={onAddFavorite}
             onChangeSearchValue={onChangeSearchValue}
             setSearchValue={setSearchValue}
+            isLoading={isLoading}
           />} />
         <Route path="/favorites" element={
           <Favorites
+            cartItems={cartItems}
             favoriteItems={favoriteItems}
             addToCart={addToCart}
             onAddFavorite={onAddFavorite} />

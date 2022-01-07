@@ -1,6 +1,31 @@
 import Card from '../components/Card/Card';
 
-function Home({ items, searchValue, addToCart, onAddFavorite, onChangeSearchValue, setSearchValue }) {
+function Home({ items, searchValue, cartItems, favoriteItems, addToCart, onAddFavorite, onChangeSearchValue, setSearchValue, isLoading }) {
+
+    const renderItems = () => {
+        const filtredItems = items.filter(item => item.title.toLowerCase().includes(searchValue.toLowerCase()));
+        return (
+            isLoading ? [...Array(8)].map((item, index) =>
+            <Card 
+                key={index}
+                isLoading={isLoading}
+                {...item}
+            />)
+            : filtredItems.map((item, index) => {
+            console.log(item.url, cartItems, favoriteItems)
+            return <Card 
+                key={index}
+                onFavorite={obj => onAddFavorite(obj)}
+                onPlus={obj => addToCart(obj)}
+                added={cartItems.some(obj => obj.url == item.url)}
+                favorited={favoriteItems.some(obj => obj.url == item.url)}
+                isLoading={isLoading}
+                {...item}
+            />})
+                
+        )
+    }
+
     return (
         <div className='content'>
             <div className='contentHeader'>
@@ -13,16 +38,7 @@ function Home({ items, searchValue, addToCart, onAddFavorite, onChangeSearchValu
             </div>
 
             <div className='sneakers'>
-                {items
-                    .filter(item => item.title.toLowerCase().includes(searchValue.toLowerCase()))
-                    .map(item =>
-                        <Card url={item.url}
-                            title={item.title}
-                            price={item.price}
-                            key={item.url}
-                            onFavorite={obj => onAddFavorite(obj)}
-                            onPlus={obj => addToCart(obj)}
-                        />)}
+                { renderItems() }
             </div>
         </div>
     )

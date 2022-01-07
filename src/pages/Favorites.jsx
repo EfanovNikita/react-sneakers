@@ -1,6 +1,6 @@
 import Card from "../components/Card/Card";
 
-function Favorites({ favoriteItems, onAddFavorite, addToCart }) {
+function Favorites({ favoriteItems, cartItems, onAddFavorite, addToCart }) {
     return (
         <div className='content'>
             <div className='contentHeader'>
@@ -16,6 +16,7 @@ function Favorites({ favoriteItems, onAddFavorite, addToCart }) {
                             key={item.url}
                             onFavorite={obj => onAddFavorite(obj)}
                             onPlus={obj => addToCart(obj)}
+                            added={cartItems.some(obj => obj.url == item.url)}
                             favorited={true}
                         />)}
             </div>
