@@ -1,30 +1,21 @@
-import { useEffect, useState } from 'react';
+import { useContext } from 'react';
 import style from './Card.module.scss';
 import ContentLoader from "react-content-loader"
+import AppContext from '../../context';
 
 
 
-function Card({ url, title, price, onPlus, onFavorite, favorited=false, added=false, isLoading }) {
-    const [isAdded, setIsAdded] = useState(added);
-    const [isFavorite, setIsFavorite] = useState(favorited);
-
-    useEffect(() => {
-        setIsAdded(added)
-    }, [added]);
-
-    useEffect(() => {
-        setIsFavorite(favorited)
-    }, [favorited])
+function Card({ url, title, price, onPlus, onFavorite, isLoading }) {
 
     const onClickPlus = () => {
         onPlus({ url, title, price });
-        setIsAdded(!isAdded);
     }
 
     const onClickFavorite = () => {
-        setIsFavorite(!isFavorite);
         onFavorite({ url, title, price });
     }
+
+    const { isAddedItem, isFavoritedItem } = useContext(AppContext);
 
     return (
         <div className={style.card}>
@@ -44,7 +35,7 @@ function Card({ url, title, price, onPlus, onFavorite, favorited=false, added=fa
             </ContentLoader> :
                 <>
                     <div className={style.favorite}>
-                        <img onClick={onClickFavorite} src={isFavorite ? '/img/liked.svg' : '/img/unliked.svg'} alt='unliked' />
+                        <img onClick={onClickFavorite} src={isFavoritedItem(url) ? '/img/liked.svg' : '/img/unliked.svg'} alt='unliked' />
                     </div>
                     <img width="100%" height={135} src={url} alt='sneakers1' />
                     <h5>{title}</h5>
@@ -53,7 +44,7 @@ function Card({ url, title, price, onPlus, onFavorite, favorited=false, added=fa
                             <span>Цена:</span>
                             <b>{`${price} руб.`}</b>
                         </div>
-                        <img onClick={onClickPlus} src={isAdded ? '/img/btn-checked.svg' : '/img/btn-plus.svg'} alt='plus' />
+                        <img onClick={onClickPlus} src={isAddedItem(url) ? '/img/btn-checked.svg' : '/img/btn-plus.svg'} alt='plus' />
                     </div>
                 </>
             }

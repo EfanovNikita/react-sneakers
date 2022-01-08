@@ -135,6 +135,11 @@
         background: darken(#9dd558, 5%);
       }
 
+      &:disabled {
+        background-color: #bebebe;
+        cursor: default;
+      }
+
       img {
         position: absolute;
         top: 20px;

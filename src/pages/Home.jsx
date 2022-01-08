@@ -1,28 +1,24 @@
+import { useContext } from 'react';
 import Card from '../components/Card/Card';
+import AppContext from '../context';
 
-function Home({ items, searchValue, cartItems, favoriteItems, addToCart, onAddFavorite, onChangeSearchValue, setSearchValue, isLoading }) {
+function Home({ searchValue, addToCart, onAddFavorite, onChangeSearchValue, setSearchValue, isLoading }) {
+
+    const { items } = useContext(AppContext);
 
     const renderItems = () => {
         const filtredItems = items.filter(item => item.title.toLowerCase().includes(searchValue.toLowerCase()));
         return (
-            isLoading ? [...Array(8)].map((item, index) =>
-            <Card 
-                key={index}
-                isLoading={isLoading}
-                {...item}
-            />)
-            : filtredItems.map((item, index) => {
-            console.log(item.url, cartItems, favoriteItems)
-            return <Card 
-                key={index}
-                onFavorite={obj => onAddFavorite(obj)}
-                onPlus={obj => addToCart(obj)}
-                added={cartItems.some(obj => obj.url == item.url)}
-                favorited={favoriteItems.some(obj => obj.url == item.url)}
-                isLoading={isLoading}
-                {...item}
-            />})
-                
+            (isLoading ? [...Array(8)] : filtredItems)
+                .map((item, index) =>
+                    <Card
+                        key={index}
+                        onFavorite={obj => onAddFavorite(obj)}
+                        onPlus={obj => addToCart(obj)}
+                        isLoading={isLoading}
+                        {...item}
+                    />)
+
         )
     }
 
@@ -38,7 +34,7 @@ function Home({ items, searchValue, cartItems, favoriteItems, addToCart, onAddFa
             </div>
 
             <div className='sneakers'>
-                { renderItems() }
+                {renderItems()}
             </div>
         </div>
     )
