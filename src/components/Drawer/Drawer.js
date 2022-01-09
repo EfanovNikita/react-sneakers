@@ -12,6 +12,8 @@ function Drawer() {
     const [isLoading, setIsLoading] = useState(false);
     const [orderNumber, setOrderNumber] = useState(null);
 
+    const totalPrice = cartItems.reduce(((sum, obj) => sum + obj.price), 0);
+
     const onClickOrder = async () => {
         try {
             setIsLoading(true);
@@ -61,12 +63,12 @@ function Drawer() {
                                 <li>
                                     <span>Итого: </span>
                                     <div></div>
-                                    <b>21 000 руб. </b>
+                                    <b>{totalPrice} руб. </b>
                                 </li>
                                 <li>
                                     <span>Налог 5%: </span>
                                     <div></div>
-                                    <b>1074 руб. </b>
+                                    <b>{totalPrice * 0.95} руб. </b>
                                 </li>
                             </ul>
                             <button className={style.greenButton} onClick={onClickOrder} disabled={isLoading}>
