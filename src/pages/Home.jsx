@@ -27,7 +27,7 @@ function Home({ searchValue, addToCart, onAddFavorite, onChangeSearchValue, setS
             <div className='contentHeader'>
                 <h1>{searchValue ? `Поиск по "${searchValue}"` : 'Все кроссовки'}</h1>
                 <div className='searchBlock'>
-                    <img src='/img/search.svg' alt='search' />
+                    <img src='img/search.svg' alt='search' />
                     {searchValue && <img className='clearBtn' onClick={() => setSearchValue('')} src='/img/btn-remove.svg' alt='clear' />}
                     <input onChange={onChangeSearchValue} value={searchValue} placeholder='Поиск...' />
                 </div>
