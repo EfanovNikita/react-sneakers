@@ -11,7 +11,7 @@ function Header({ openCart }) {
         <header>
             <Link to='/'>
                 <div className={style.headerLeft}>
-                    <img width={40} height={40} src='/img/logo.png' alt="logo" />
+                    <img width={40} height={40} src='img/logo.png' alt="logo" />
                     <div className={style.headerInfo}>
                         <h3>REACT SNEAKERS</h3>
                         <p>Магазин лучших кроссовок</p>
@@ -21,17 +21,17 @@ function Header({ openCart }) {
 
             <ul className={style.headerRight}>
                 <li onClick={openCart}>
-                    <img width={18} height={18} src='/img/cart.svg' alt="cart" />
+                    <img width={18} height={18} src='img/cart.svg' alt="cart" />
                     <span>{totalPrice} руб.</span>
                 </li>
                 <li>
                     <Link to='/favorites'>
-                        <img width={18} height={18} src='/img/heart.svg' alt="heart" />
+                        <img width={18} height={18} src='img/heart.svg' alt="heart" />
                     </Link>
                 </li>
                 <li>
                     <Link to='/orders'>
-                        <img width={18} height={18} src='/img/user.svg' alt="user" />
+                        <img width={18} height={18} src='img/user.svg' alt="user" />
                     </Link>
                 </li>
             </ul>
