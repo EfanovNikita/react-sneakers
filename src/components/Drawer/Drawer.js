@@ -37,12 +37,12 @@ function Drawer({ opened }) {
     return (
         <div className={`${style.overlay} ${opened ? style.overlayVisible : ''}`}>
             <div className={style.drawer}>
-                <h2>Корзина <img onClick={onCartExit} src='/img/btn-remove.svg' alt='close' /></h2>
+                <h2>Корзина <img onClick={onCartExit} src='img/btn-remove.svg' alt='close' /></h2>
 
                 {!cartItems[0] ?
                     <Info title={isOrderComplite ? "Заказ оформлен!" : "Корзина пустая"}
                         description={isOrderComplite ? `Ваш заказ #${orderNumber} отправлен доставкой курьером` : "Добавьте товар в корзину"}
-                        image={isOrderComplite ? "/img/complete-order.jpg" : "/img/empty-cart.jpg"}
+                        image={isOrderComplite ? "img/complete-order.jpg" : "img/empty-cart.jpg"}
                         onCartExit={onCartExit} />
                     :
                     <>
@@ -54,7 +54,7 @@ function Drawer({ opened }) {
                                         <p>{obj.title}</p>
                                         <b>{obj.price} руб.</b>
                                     </div>
-                                    <img className={style.btnRemove} onClick={() => onRemoveItem(obj.id)} src='/img/btn-remove.svg' alt='remove' />
+                                    <img className={style.btnRemove} onClick={() => onRemoveItem(obj.id)} src='img/btn-remove.svg' alt='remove' />
                                 </div>
                             ))}
                         </div>
@@ -73,7 +73,7 @@ function Drawer({ opened }) {
                             </ul>
                             <button className={style.greenButton} onClick={onClickOrder} disabled={isLoading}>
                                 Оформить заказ
-                                <img src="/img/arrow.svg" alt="arrow" />
+                                <img src="img/arrow.svg" alt="arrow" />
                             </button>
                         </div>
                     </>
