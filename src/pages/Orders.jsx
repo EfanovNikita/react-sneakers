@@ -8,11 +8,15 @@ function Orders() {
     const [isLoading, setIsLoading] = useState(true);
     useEffect(() => {
         setIsLoading(true);
-        async function getOrders() {
-            const ordersResponse = await axios.get('https://61d422528df81200178a8ac2.mockapi.io/orders');
-            setOrderItems(ordersResponse.data);
+        try {
+            async function getOrders() {
+                const ordersResponse = await axios.get('https://61d422528df81200178a8ac2.mockapi.io/orders');
+                setOrderItems(ordersResponse.data);
+            }
+            getOrders();
+        } catch (error) {
+            console.log(error);
         }
-        getOrders();
         setIsLoading(false);
     }, [])
 
