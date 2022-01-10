@@ -4,6 +4,7 @@ import Header from './components/Header/Header';
 import Drawer from './components/Drawer/Drawer';
 import Home from './pages/Home';
 import Favorites from './pages/Favorites';
+import Orders from './pages/Orders';
 import AppContext from './context';
 
 import './index.scss';
@@ -76,7 +77,7 @@ function App() {
   }
 
   return (
-    <AppContext.Provider value={{items, cartItems, favoriteItems, isAddedItem, isFavoritedItem, setCartOpened, onRemoveItem, setCartItems}}>
+    <AppContext.Provider value={{ items, cartItems, favoriteItems, isAddedItem, isFavoritedItem, setCartOpened, onRemoveItem, setCartItems }}>
       <div className="wrapper">
         {cartOpened && <Drawer />}
         <Header openCart={() => setCartOpened(true)} />
@@ -89,12 +90,15 @@ function App() {
               onAddFavorite={onAddFavorite}
               onChangeSearchValue={onChangeSearchValue}
               setSearchValue={setSearchValue}
-              isLoading={isLoading}
-            />} />
+              isLoading={isLoading} />
+          } />
           <Route path="/favorites" element={
             <Favorites
               addToCart={addToCart}
               onAddFavorite={onAddFavorite} />
+          } />
+          <Route path="/orders" element={
+            <Orders />
           } />
         </Routes>
       </div>

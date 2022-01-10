@@ -26,11 +26,13 @@ function Header({ openCart }) {
                 </li>
                 <li>
                     <Link to='/favorites'>
-                        <img width={18} height={18} src='/img/heart.svg' alt="user" />
+                        <img width={18} height={18} src='/img/heart.svg' alt="heart" />
                     </Link>
                 </li>
                 <li>
-                    <img width={18} height={18} src='/img/user.svg' alt="user" />
+                    <Link to='/orders'>
+                        <img width={18} height={18} src='/img/user.svg' alt="user" />
+                    </Link>
                 </li>
             </ul>
         </header>

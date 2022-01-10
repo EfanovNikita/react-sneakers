@@ -5,7 +5,7 @@ import AppContext from '../../context';
 
 
 
-function Card({ url, title, price, onPlus, onFavorite, isLoading }) {
+function Card({ url, title, price, onPlus, onFavorite, isLoading, isOrder=false }) {
 
     const onClickPlus = () => {
         onPlus({ url, title, price });
@@ -35,7 +35,7 @@ function Card({ url, title, price, onPlus, onFavorite, isLoading }) {
             </ContentLoader> :
                 <>
                     <div className={style.favorite}>
-                        <img onClick={onClickFavorite} src={isFavoritedItem(url) ? '/img/liked.svg' : '/img/unliked.svg'} alt='unliked' />
+                        {!isOrder && <img onClick={onClickFavorite} src={isFavoritedItem(url) ? '/img/liked.svg' : '/img/unliked.svg'} alt='unliked' />}
                     </div>
                     <img width="100%" height={135} src={url} alt='sneakers1' />
                     <h5>{title}</h5>
@@ -44,7 +44,7 @@ function Card({ url, title, price, onPlus, onFavorite, isLoading }) {
                             <span>Цена:</span>
                             <b>{`${price} руб.`}</b>
                         </div>
-                        <img onClick={onClickPlus} src={isAddedItem(url) ? '/img/btn-checked.svg' : '/img/btn-plus.svg'} alt='plus' />
+                        {!isOrder && <img onClick={onClickPlus} src={isAddedItem(url) ? '/img/btn-checked.svg' : '/img/btn-plus.svg'} alt='plus' />}
                     </div>
                 </>
             }
