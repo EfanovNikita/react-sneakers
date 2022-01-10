@@ -4,7 +4,7 @@ import AppContext from '../../context';
 import Info from '../Info/Info';
 import style from './Drawer.module.scss';
 
-function Drawer() {
+function Drawer({ opened }) {
 
     const { setCartOpened, onRemoveItem, cartItems, setCartItems } = useContext(AppContext);
 
@@ -35,7 +35,7 @@ function Drawer() {
     }
 
     return (
-        <div className={style.overlay}>
+        <div className={`${style.overlay} ${opened ? style.overlayVisible : ''}`}>
             <div className={style.drawer}>
                 <h2>Корзина <img onClick={onCartExit} src='/img/btn-remove.svg' alt='close' /></h2>
 
