@@ -68,7 +68,7 @@ function Drawer({ opened }) {
                                 <li>
                                     <span>Налог 5%: </span>
                                     <div></div>
-                                    <b>{totalPrice * 0.95} руб. </b>
+                                    <b>{Math.floor(totalPrice * 0.05)} руб. </b>
                                 </li>
                             </ul>
                             <button className={style.greenButton} onClick={onClickOrder} disabled={isLoading}>

@@ -9,7 +9,7 @@ function Info({ title, description, image, onCartExit }) {
             <p>{description}</p>
             <button className={style.greenButton} onClick={onCartExit}>
                 Вернуться назад
-                <img className={style.leftArrow} src="/img/arrow.svg" alt="arrow" />
+                <img className={style.leftArrow} src="img/arrow.svg" alt="arrow" />
             </button>
         </div>
     )
