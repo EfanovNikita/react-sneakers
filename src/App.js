@@ -8,109 +8,136 @@ import Orders from './pages/Orders';
 import AppContext from './context';
 
 import './index.scss';
-import axios from 'axios';
+import { API } from './api/api';
 
 function App() {
-  const [cartOpened, setCartOpened] = useState(false);
-  const [cartItems, setCartItems] = useState([]);
-  const [items, setItems] = useState([]);
-  const [searchValue, setSearchValue] = useState('');
-  const [favoriteItems, setFavoriteItems] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+
+  const [cartOpened, setCartOpened] = useState(false); //корзина (открыта/закрыта)
+  const [cartItems, setCartItems] = useState([]); //товары в корзине
+  const [items, setItems] = useState([]); //все товары
+  const [searchValue, setSearchValue] = useState(''); //значение поля (поиск по товарам)
+  const [favoriteItems, setFavoriteItems] = useState([]); //товары в избранном
+  const [isLoading, setIsLoading] = useState(true); //показатель загрузки
+
+  //получить данные о товарах, добавленных в корзину
+  function getCartItems() {
+    return API('get', 'cart')
+  }
+  // получить данные о всех товарах
+  function getItems() {
+    return API('get', 'items')
+  }
+  // получить данные о товарах, добавленных в избранное
+  function getFavoriteItems() {
+    return API('get', 'favorites')
+  }
 
   useEffect(() => {
-    async function fetchData() {
-      setIsLoading(true);
-      try {
-        const [itemsResponse, cartResponse, favoriteResponse] = await Promise.all([
-          axios.get('https://61d422528df81200178a8ac2.mockapi.io/items'),
-          await axios.get('https://61d422528df81200178a8ac2.mockapi.io/cart'),
-          await axios.get('https://61d422528df81200178a8ac2.mockapi.io/favorites')
-        ])
-        setCartItems(cartResponse.data);
-        setFavoriteItems(favoriteResponse.data);
-        setItems(itemsResponse.data);
-      } catch (error) {
-        console.log(error)
-      }
+    //получаем данные
+    setIsLoading(true);
+    //товары в корзине
+    getCartItems().then(res => {
+      setCartItems(res.data);
+    }).catch(err => {
+      console.log(err)
+    })
+    //товары в избранном
+    getFavoriteItems().then(res => {
+      setFavoriteItems(res.data)
+    }).catch(err => {
+      console.log(err)
+    })
+    //все товары
+    getItems().then(res => {
+      setItems(res.data)
       setIsLoading(false);
-    }
-    fetchData();
+    }).catch(err => {
+      console.log(err)
+      setIsLoading(false);
+    })
   }, []);
-
-  const addToCart = async obj => {
-    try {
-      const findCartItem = cartItems.find(item => item.url == obj.url);
-      if (findCartItem) {
-        setCartItems(prev => prev.filter(item => item.url !== obj.url));
-        axios.delete(`https://61d422528df81200178a8ac2.mockapi.io/cart/${findCartItem.id}`)
-        return
-      }
-      const res = await axios.post('https://61d422528df81200178a8ac2.mockapi.io/cart', obj)
+  
+  // добавить товар в корзину
+  const addToCart = obj => {
+    API('post', 'cart', obj).then(res => {
       setCartItems(prev => [...prev, res.data]);
-    } catch (error) {
-      console.log(error)
-    }
+    }).catch(err => {
+      console.log(err)
+    })
   }
-
-  const onRemoveItem = id => {
-    try {
-      axios.delete(`https://61d422528df81200178a8ac2.mockapi.io/cart/${id}`)
-      setCartItems(prev => prev.filter(item => item.id !== id));
-    } catch (error) {
-      console.log(error)
-    }
+  // удаляет товар из корзины
+  const onRemoveItem = url => {
+    const findCartItem = cartItems.find(item => item.url === url);
+    API('delete', `cart/${findCartItem.id}`).then(res => {
+      setCartItems(prev => prev.filter(item => item.id !== findCartItem.id));
+    }).catch(err => {
+      console.log(err)
+    })
   }
-
+  // контролирует поле ввода
   const onChangeSearchValue = event => {
     setSearchValue(event.target.value)
   }
-
-  const onAddFavorite = async obj => {
-    try {
-      const favoriteItem = favoriteItems.some(item => item.url == obj.url);
-      if (favoriteItem) {
-        axios.delete(`https://61d422528df81200178a8ac2.mockapi.io/favorites/${favoriteItem.id}`)
-        setFavoriteItems(prev => prev.filter(item => item.url !== obj.url))
-      } else {
-        const res = await axios.post('https://61d422528df81200178a8ac2.mockapi.io/favorites', obj)
-        setFavoriteItems(prev => [...prev, res.data]);
-      }
-    } catch (error) {
-      console.log(error)
-    }
+  // добавляет товар в избранное
+  const onAddFavorite = obj => {
+    API('post', 'favorites', obj).then(res => {
+      setFavoriteItems(prev => [...prev, res.data]);
+    }).catch(err => {
+      console.log(err)
+    })
   }
-
+  // удаляет товар из избранного
+  function removeFromFavorite(url) {
+    const favoriteItem = favoriteItems.find(item => item.url === url);
+    API('delete', `favorites/${favoriteItem.id}`).then(res => {
+      setFavoriteItems(prev => prev.filter(item => item.url !== url))
+    }).catch(err => {
+      console.log(err)
+    })
+  }
+  // проверяет, есть ли данный товар в корзине
   const isAddedItem = url => {
-    return cartItems.some(item => item.url == url)
+    return cartItems.some(item => item.url === url)
   }
-
+  // проверяет, есть ли данный товар в избранном
   const isFavoritedItem = url => {
-    return favoriteItems.some(item => item.url == url)
+    return favoriteItems.some(item => item.url === url)
+  }
+  // объект для контекста
+  const contextValue = {
+    items, //все товары
+    cartItems, //товары, добавленные в корзину
+    favoriteItems, //товары, добавленные в избранное
+    searchValue, //значение, поискового запроса
+    isLoading, //значение, обозначающее процесс загрузки
+    cartOpened, //значение, обозначающее открытую/закрытыую корзину
+    addToCart, // ф-ция, добавляет товар в корзину
+    onAddFavorite, //ф-ция, добавляет товар в избранное
+    isAddedItem,  //ф-я, проверяет, есть ли данный товар в корзине
+    isFavoritedItem,  //ф-я, проверяет, есть ли данный товар в избранном
+    onChangeSearchValue, //ф-я, для события onChange у input элемента
+    setSearchValue, //ф-я, меняет searchValue на указанное значение
+    setCartOpened, //ф-я, меняет cartOpened
+    onRemoveItem, //ф-я, удаляет товар из корзины
+    removeFromFavorite, //ф-я, удаляет товар из избранных(favorite)
+    setCartItems, // устанавливает cartItems
+    setIsLoading //ф-я, устанавливает isLoading
   }
 
   return (
-    <AppContext.Provider value={{ items, cartItems, favoriteItems, isAddedItem, isFavoritedItem, setCartOpened, onRemoveItem, setCartItems }}>
+    <AppContext.Provider value={contextValue}>
       <div className="wrapper">
-        <Drawer opened={cartOpened} />
+        <Drawer />
         <Header openCart={() => setCartOpened(true)} />
 
         <Routes>
-          <Route exact path="/" element={
-            <Home
-              searchValue={searchValue}
-              addToCart={addToCart}
-              onAddFavorite={onAddFavorite}
-              onChangeSearchValue={onChangeSearchValue}
-              setSearchValue={setSearchValue}
-              isLoading={isLoading} />
+          <Route path='/' element={
+            <Home />
           } />
-          <Route path="/favorites" element={
-            <Favorites
-              addToCart={addToCart}
-              onAddFavorite={onAddFavorite} />
+          <Route path="favorites" element={
+            <Favorites />
           } />
-          <Route path="/orders" element={
+          <Route path="orders" element={
             <Orders />
           } />
         </Routes>

@@ -1,23 +1,28 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import { API } from "../api/api";
 import Card from "../components/Card/Card";
-import axios from 'axios';
+import AppContext from "../context";
 
 function Orders() {
 
-    const [orderItems, setOrderItems] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
-    useEffect(() => {
+    const { isLoading, setIsLoading } = useContext(AppContext)
+
+    const [orderItems, setOrderItems] = useState([]); // заказанные товары
+
+    // получаем с сервера данные о сделанных заказах
+    async function fetchOrders() {
         setIsLoading(true);
         try {
-            async function getOrders() {
-                const ordersResponse = await axios.get('https://61d422528df81200178a8ac2.mockapi.io/orders');
-                setOrderItems(ordersResponse.data);
-            }
-            getOrders();
-        } catch (error) {
-            console.log(error);
+            const response = await API('get', '/orders');
+            setOrderItems(response.data)
+            setIsLoading(false);
+        } catch (err) {
+            console.log(err)
         }
-        setIsLoading(false);
+    }
+
+    useEffect(() => {
+        fetchOrders()
     }, [])
 
     return (
@@ -31,22 +36,19 @@ function Orders() {
                     <div className="sneakers">
                         <Card key={index} />
                     </div>
-                ) : orderItems
-                    .map(item =>
-                        <>
-                            <h2>Заказ #{item.id}</h2>
-                            <div className="sneakers">
-                                {item.items.map(obj =>
-                                    <Card
-                                        key={obj.url}
-                                        isLoading={isLoading}
-                                        isOrder={true}
-                                        {...obj}
-                                    />
-                                )}
-                            </div>
-                        </>
-                    )
+                ) : orderItems.map(item =>
+                    <>
+                        <h2>Заказ #{item.id}</h2>
+                        <div className="sneakers">
+                            {item.order.map(obj =>
+                                <Card
+                                    key={obj.url}
+                                    isOrder={true}
+                                    {...obj}
+                                />
+                            )}
+                        </div>
+                    </>)
             }
         </div>
     )

@@ -2,7 +2,7 @@ import { useContext } from "react";
 import Card from "../components/Card/Card";
 import AppContext from "../context";
 
-function Favorites({ onAddFavorite, addToCart }) {
+function Favorites() {
 
     const { favoriteItems } = useContext(AppContext);
 
@@ -17,8 +17,6 @@ function Favorites({ onAddFavorite, addToCart }) {
                     .map(item =>
                         <Card 
                             key={item.url}
-                            onFavorite={obj => onAddFavorite(obj)}
-                            onPlus={obj => addToCart(obj)}
                             {...item}
                         />)}
             </div>

@@ -5,17 +5,31 @@ import AppContext from '../../context';
 
 
 
-function Card({ url, title, price, onPlus, onFavorite, isLoading, isOrder=false }) {
+function Card({ url, title, price, isOrder = false }) {
 
+    const { isAddedItem,
+        isFavoritedItem,
+        isLoading,
+        onRemoveItem,
+        addToCart,
+        removeFromFavorite,
+        onAddFavorite } = useContext(AppContext);
+    // добваить товар в корзину
     const onClickPlus = () => {
-        onPlus({ url, title, price });
+        addToCart({ url, title, price });
     }
-
+    // удалить товар из корзины
+    const deleteFromCart = () => {
+        onRemoveItem(url)
+    }
+    // добавить товар в избранное
     const onClickFavorite = () => {
-        onFavorite({ url, title, price });
+        onAddFavorite({ url, title, price });
     }
-
-    const { isAddedItem, isFavoritedItem } = useContext(AppContext);
+    // удалить товар из избранных
+    const deleteFromFavorite = () => {
+        removeFromFavorite(url)
+    }
 
     return (
         <div className={style.card}>
@@ -35,7 +49,9 @@ function Card({ url, title, price, onPlus, onFavorite, isLoading, isOrder=false 
             </ContentLoader> :
                 <>
                     <div className={style.favorite}>
-                        {!isOrder && <img onClick={onClickFavorite} src={isFavoritedItem(url) ? 'img/liked.svg' : 'img/unliked.svg'} alt='unliked' />}
+                        {!isOrder && (isFavoritedItem(url) ?
+                            <img onClick={deleteFromFavorite} src={'img/liked.svg'} alt='liked' />
+                            : <img onClick={onClickFavorite} src={'img/unliked.svg'} alt='unliked' />)}
                     </div>
                     <img width="100%" height={135} src={url} alt='sneakers1' />
                     <h5>{title}</h5>
@@ -44,7 +60,9 @@ function Card({ url, title, price, onPlus, onFavorite, isLoading, isOrder=false 
                             <span>Цена:</span>
                             <b>{`${price} руб.`}</b>
                         </div>
-                        {!isOrder && <img onClick={onClickPlus} src={isAddedItem(url) ? 'img/btn-checked.svg' : 'img/btn-plus.svg'} alt='plus' />}
+                        {!isOrder && (isAddedItem(url) ?
+                            <img onClick={deleteFromCart} src={'img/btn-checked.svg'} alt='checked' />
+                            : <img onClick={onClickPlus} src={'img/btn-plus.svg'} alt='plus' />)}
                     </div>
                 </>
             }
