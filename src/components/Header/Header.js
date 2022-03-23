@@ -3,9 +3,13 @@ import { Link } from 'react-router-dom';
 import { useContext } from 'react';
 import AppContext from '../../context';
 
-function Header({ openCart }) {
-    const { cartItems } = useContext(AppContext);
+function Header() {
+    const { cartItems, setCartOpened } = useContext(AppContext);
     const totalPrice = cartItems.reduce(((sum, obj) => sum + obj.price), 0);
+
+    function openCart() {
+        setCartOpened(true)
+    }
 
     return (
         <header>

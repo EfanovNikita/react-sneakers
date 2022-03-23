@@ -128,7 +128,7 @@ function App() {
     <AppContext.Provider value={contextValue}>
       <div className="wrapper">
         <Drawer />
-        <Header openCart={() => setCartOpened(true)} />
+        <Header />
 
         <Routes>
           <Route path='/' element={
