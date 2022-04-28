@@ -1,24 +1,40 @@
-import { useContext } from 'react';
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import Card from '../components/Card/Card';
-import AppContext from '../context';
+import { itemsSelector } from '../redux/itemsSlice';
+import { cartSelector } from '../redux/cartSlice';
+import { favoriteSelector } from '../redux/favoriteSlice';
 
 function Home() {
 
-    const { items,
-        searchValue,
-        onChangeSearchValue,
-        setSearchValue,
-        isLoading } = useContext(AppContext);
+    const [searchValue, setSearchValue] = useState('');
+    const items = useSelector(itemsSelector.selectAll);
+    const cartItems = useSelector(cartSelector.selectAll);
+    const favoriteItems = useSelector(favoriteSelector.selectAll);
+    const itemsIsLoading = useSelector(state => state.items.loading) === 'loading';
+    const cartIsLoading = useSelector(state => state.cart.loading) === 'loading';
+    const favoriteIsLoading = useSelector(state => state.favorite.loading) === 'loading';
+    const allIsLoading = itemsIsLoading && favoriteIsLoading && cartIsLoading;
+
+    const onChangeSearchValue = (e) => {
+        setSearchValue(e.target.value)
+    }
 
     const renderItems = () => {
         const filtredItems = items.filter(item => item.title.toLowerCase().includes(searchValue.toLowerCase()));
         return (
-            (isLoading ? [...Array(8)] : filtredItems)
-                .map((item, index) =>
-                    <Card
+            (allIsLoading ? [...Array(8)] : filtredItems)
+                .map((item, index) => {
+                    const isAddedItem = Boolean(cartItems?.find(cartItem => cartItem.url === item.url))
+                    const isFavorited = Boolean(favoriteItems?.find(favoriteItem => favoriteItem.url === item.url))
+                    return <Card
                         key={index}
+                        isLoading = {itemsIsLoading}
+                        isAddedItem={isAddedItem}
+                        isFavorited={isFavorited}
                         {...item}
-                    />)
+                    />
+                })
 
         )
     }
@@ -28,8 +44,8 @@ function Home() {
             <div className='contentHeader'>
                 <h1>{searchValue ? `Поиск по "${searchValue}"` : 'Все кроссовки'}</h1>
                 <div className='searchBlock'>
-                    <img src='img/search.svg' alt='search' />
-                    {searchValue && <img className='clearBtn' onClick={() => setSearchValue('')} src='img/btn-remove.svg' alt='clear' />}
+                    <img src={process.env.PUBLIC_URL + '/img/search.svg'} alt='search' />
+                    {searchValue && <img className='clearBtn' onClick={() => setSearchValue('')} src={process.env.PUBLIC_URL + '/img/btn-remove.svg'} alt='clear' />}
                     <input onChange={onChangeSearchValue} value={searchValue} placeholder='Поиск...' />
                 </div>
             </div>

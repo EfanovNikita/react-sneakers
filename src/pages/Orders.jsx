@@ -1,13 +1,11 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import { API } from "../api/api";
 import Card from "../components/Card/Card";
-import AppContext from "../context";
 
 function Orders() {
 
-    const { isLoading, setIsLoading } = useContext(AppContext)
-
     const [orderItems, setOrderItems] = useState([]); // заказанные товары
+    const [isLoading, setIsLoading] = useState(false)
 
     // получаем с сервера данные о сделанных заказах
     async function fetchOrders() {
