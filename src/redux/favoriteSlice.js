@@ -15,7 +15,7 @@ export const addToFavorite = createAsyncThunk(
     'favoriteSneakers/addToFavorite',
     async (item) => {
         const res = await API('post', 'favorites', item)
-        return res
+        return res.data
     }
 )
 
@@ -23,7 +23,7 @@ export const removeFromFavorite = createAsyncThunk(
     'favoriteSneakers/removeFromFavorite',
     async (id) => {
         const res = await API('delete', `favorites/${id}`)
-        return res
+        return res.data
     }
 )
 
@@ -64,7 +64,7 @@ const favoriteSlice = createSlice({
                 state.error = null
             })
             .addCase(removeFromFavorite.fulfilled, (state, action) => {
-                favoriteAdapter.removeOne(state, action.payload)
+                favoriteAdapter.removeOne(state, action.payload.id)
                 state.loading = 'idle'
                 state.error = null
             })

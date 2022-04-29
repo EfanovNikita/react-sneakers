@@ -3,18 +3,24 @@ import { API } from '../../api/api';
 import AppContext from '../../context';
 import Info from '../Info/Info';
 import style from './Drawer.module.scss';
+import completeOrder from '../../assets/img/complete-order.jpg';
+import emptyCart from '../../assets/img/empty-cart.jpg';
+import btnRemove from '../../assets/img/btn-remove.svg';
+import arrow from '../../assets/img/arrow.svg';
+import { useDispatch, useSelector } from 'react-redux';
+import { cartSelector, removeFromCart } from '../../redux/cartSlice';
 
-function Drawer() {
+function Drawer({setCartOpened, cartOpened}) {
 
-    const { setCartOpened, onRemoveItem, cartItems, setCartItems, cartOpened } = useContext(AppContext);
-
+    //const { /*setCartOpened,*/ onRemoveItem, /*cartItems*/ setCartItems, /*cartOpened*/ } = useContext(AppContext);
+    const cartItems = useSelector(cartSelector.selectAll);
     const [isOrderComplite, setIsOrderComplite] = useState(false); //сделан(или нет) заказ
     const [isLoading, setIsLoading] = useState(false); // локальный показатель загрузки
     const [orderNumber, setOrderNumber] = useState(null); // номер заказа
-
+    const dispatch = useDispatch();
     const totalPrice = cartItems.reduce(((sum, obj) => sum + obj.price), 0); //цена всех товаров в корзине
     // отправляем заказ на сервер и удаляем товары из корзины
-    const doOrder = () => {
+    /*const doOrder = () => {
         setIsLoading(true);
         API('post', 'orders', { order: cartItems }).then(res => {
             cartItems.forEach(item => {
@@ -27,34 +33,38 @@ function Drawer() {
         }).catch(err => {
             console.log(err)
         })
-    }
+    }*/
     // закрыть корзину
     const onCartExit = () => {
         setCartOpened(false);
         setIsOrderComplite(false);
     }
 
+    const onRemoveItem = (e) => {
+        dispatch(removeFromCart(e.target.dataset.id))
+    }
+
     return (
         <div className={`${style.overlay} ${cartOpened ? style.overlayVisible : ''}`}>
             <div className={style.drawer}>
-                <h2>Корзина <img onClick={onCartExit} src='img/btn-remove.svg' alt='close' /></h2>
+                <h2>Корзина <img onClick={onCartExit} src={btnRemove} alt='close' /></h2>
 
                 {!cartItems[0] ?
                     <Info title={isOrderComplite ? "Заказ оформлен!" : "Корзина пустая"}
                         description={isOrderComplite ? `Ваш заказ #${orderNumber} отправлен доставкой курьером` : "Добавьте товар в корзину"}
-                        image={isOrderComplite ? "img/complete-order.jpg" : "img/empty-cart.jpg"}
+                        image={isOrderComplite ? completeOrder : emptyCart}
                         onCartExit={onCartExit} />
                     :
                     <>
                         <div className={style.items}>
                             {cartItems.map(obj => (
                                 <div className={style.cartItem} key={obj.url}>
-                                    <div style={{ backgroundImage: `url(${obj.url})` }} className={style.cartItemImg}></div>
+                                    <div style={{ backgroundImage: `url(${require(`../../assets/${obj.url}`)})` }} className={style.cartItemImg}></div>
                                     <div>
                                         <p>{obj.title}</p>
                                         <b>{obj.price} руб.</b>
                                     </div>
-                                    <img className={style.btnRemove} onClick={() => onRemoveItem(obj)} src='img/btn-remove.svg' alt='remove' />
+                                    <img className={style.btnRemove} onClick={onRemoveItem} src={btnRemove} alt='remove' data-id={obj.id}/>
                                 </div>
                             ))}
                         </div>
@@ -71,9 +81,9 @@ function Drawer() {
                                     <b>{Math.floor(totalPrice * 0.05)} руб. </b>
                                 </li>
                             </ul>
-                            <button className={style.greenButton} onClick={doOrder} disabled={isLoading}>
+                            <button className={style.greenButton} onClick={/*doOrder*/ () => {}} disabled={isLoading}>
                                 Оформить заказ
-                                <img src="img/arrow.svg" alt="arrow" />
+                                <img src={arrow} alt="arrow" />
                             </button>
                         </div>
                     </>

@@ -1,36 +1,38 @@
-import { useContext } from 'react';
 import style from './Card.module.scss';
 import ContentLoader from "react-content-loader";
-import AppContext from '../../context';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart, cartSelector, removeFromCart } from '../../redux/cartSlice';
 import { addToFavorite, favoriteSelector, removeFromFavorite } from '../../redux/favoriteSlice';
+import btnChecked from '../../assets/img/btn-checked.svg';
+import btnPlus from '../../assets/img/btn-plus.svg';
+import like from '../../assets/img/liked.svg';
+import unliked from '../../assets/img/unliked.svg';
 
 
 
-function Card({ url, title, price, isOrder = false, isAddedItem = false, isFavorited = false, isLoading = false }) {
+function Card({url, title, price, isOrder = false, isAddedItem = false, isFavorited = false, isLoading = false }) {
 
     const dispatch = useDispatch();
+    const cartItems = useSelector(cartSelector.selectAll);
+    const favoriteItems = useSelector(favoriteSelector.selectAll);
     // добваить товар в корзину
-    /*const onClickPlus = () => {
-        //addToCart({ url, title, price });
-        //dispatch(addToCart({ url, title, price }))
+    const onClickPlus = () => {
+        dispatch(addToCart({ url, title, price }))
     }
     // удалить товар из корзины
-    //const deleteFromCart = () => {
-        //onRemoveItem(url)
-        dispatch(removeFromCart(props.id))
+    const deleteFromCart = () => {
+        const itemId = cartItems.find(item => item.url === url).id
+        dispatch(removeFromCart(itemId))
     }
     // добавить товар в избранное
-    //const onClickFavorite = () => {
-        //onAddFavorite({ url, title, price });
+    const onClickFavorite = () => {
         dispatch(addToFavorite({ url, title, price }))
     }
     // удалить товар из избранных
     const deleteFromFavorite = () => {
-        //removeFromFavorite(url)
-        //dispatch(removeFromFavorite(id))
-    }*/
+        const itemId = favoriteItems.find(item => item.url === url).id
+        dispatch(removeFromFavorite(itemId))
+    }
 
     return (
         <div className={style.card}>
@@ -51,10 +53,10 @@ function Card({ url, title, price, isOrder = false, isAddedItem = false, isFavor
                 <>
                     <div className={style.favorite}>
                         {!isOrder && (isFavorited ?
-                            <img  src={process.env.PUBLIC_URL + '/img/liked.svg'} alt='liked' />
-                            : <img  src={process.env.PUBLIC_URL + '/img/unliked.svg'} alt='unliked' />)}
+                            <img  src={like} alt='liked' onClick={deleteFromFavorite}/>
+                            : <img  src={unliked} alt='unliked' onClick={onClickFavorite}/>)}
                     </div>
-                    <img width="100%" height={135} src={process.env.PUBLIC_URL + '/' + url} alt='sneakers1' />
+                    <img width="100%" height={135} src={require(`../../assets/${url}`)} alt='sneaker' />
                     <h5>{title}</h5>
                     <div className={style.cardInfo}>
                         <div className={style.cardPrice}>
@@ -62,8 +64,8 @@ function Card({ url, title, price, isOrder = false, isAddedItem = false, isFavor
                             <b>{`${price} руб.`}</b>
                         </div>
                         {!isOrder && (isAddedItem ?
-                            <img src={process.env.PUBLIC_URL + '/img/btn-checked.svg'} alt='checked' />
-                            : <img src={process.env.PUBLIC_URL + '/img/btn-plus.svg'} alt='plus' />)}
+                            <img src={btnChecked} alt='checked' onClick={deleteFromCart}/>
+                            : <img src={btnPlus} alt='plus' onClick={onClickPlus}/>)}
                     </div>
                 </>
             }

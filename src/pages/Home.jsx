@@ -4,6 +4,8 @@ import Card from '../components/Card/Card';
 import { itemsSelector } from '../redux/itemsSlice';
 import { cartSelector } from '../redux/cartSlice';
 import { favoriteSelector } from '../redux/favoriteSlice';
+import searchImg from '../assets/img/search.svg';
+import btnRemove from '../assets/img/btn-remove.svg';
 
 function Home() {
 
@@ -44,8 +46,8 @@ function Home() {
             <div className='contentHeader'>
                 <h1>{searchValue ? `Поиск по "${searchValue}"` : 'Все кроссовки'}</h1>
                 <div className='searchBlock'>
-                    <img src={process.env.PUBLIC_URL + '/img/search.svg'} alt='search' />
-                    {searchValue && <img className='clearBtn' onClick={() => setSearchValue('')} src={process.env.PUBLIC_URL + '/img/btn-remove.svg'} alt='clear' />}
+                    <img src={searchImg} alt='search' />
+                    {searchValue && <img className='clearBtn' onClick={() => setSearchValue('')} src={btnRemove} alt='clear' />}
                     <input onChange={onChangeSearchValue} value={searchValue} placeholder='Поиск...' />
                 </div>
             </div>

@@ -15,7 +15,7 @@ export const addToCart = createAsyncThunk(
     'cartSneakers/addToCart',
     async (item) => {
         const res = await API('post', 'cart', item)
-        return res
+        return res.data
     }
 )
 
@@ -23,7 +23,7 @@ export const removeFromCart = createAsyncThunk(
     'cartSneakers/removeFromCart',
     async (id) => {
         const res = await API('delete', `cart/${id}`)
-        return res
+        return res.data
     }
 )
 
@@ -66,7 +66,7 @@ const cartSlice = createSlice({
                 state.error = null
             })
             .addCase(removeFromCart.fulfilled, (state, action) => {
-                cartAdapter.removeOne(state, action.payload)
+                cartAdapter.removeOne(state, action.payload.id)
                 state.loading = 'idle'
                 state.error = null
             })
