@@ -1,6 +1,4 @@
 import { useContext, useState } from 'react';
-import { API } from '../../api/api';
-import AppContext from '../../context';
 import Info from '../Info/Info';
 import style from './Drawer.module.scss';
 import completeOrder from '../../assets/img/complete-order.jpg';
@@ -9,8 +7,9 @@ import btnRemove from '../../assets/img/btn-remove.svg';
 import arrow from '../../assets/img/arrow.svg';
 import { useDispatch, useSelector } from 'react-redux';
 import { cartSelector, removeFromCart } from '../../redux/cartSlice';
+import { postOrder } from '../../redux/orderSlice';
 
-function Drawer({setCartOpened, cartOpened}) {
+function Drawer({ setCartOpened, cartOpened }) {
 
     //const { /*setCartOpened,*/ onRemoveItem, /*cartItems*/ setCartItems, /*cartOpened*/ } = useContext(AppContext);
     const cartItems = useSelector(cartSelector.selectAll);
@@ -20,9 +19,9 @@ function Drawer({setCartOpened, cartOpened}) {
     const dispatch = useDispatch();
     const totalPrice = cartItems.reduce(((sum, obj) => sum + obj.price), 0); //цена всех товаров в корзине
     // отправляем заказ на сервер и удаляем товары из корзины
-    /*const doOrder = () => {
+    const doOrder = async () => {
         setIsLoading(true);
-        API('post', 'orders', { order: cartItems }).then(res => {
+       /* API('post', 'orders', { order: cartItems }).then(res => {
             cartItems.forEach(item => {
                 API('delete', `cart/${item.id}`);
             });
@@ -32,8 +31,19 @@ function Drawer({setCartOpened, cartOpened}) {
             setIsLoading(false);
         }).catch(err => {
             console.log(err)
-        })
-    }*/
+        })*/
+        try {
+            const res = await dispatch(postOrder({ order: cartItems })).unwrap()
+            cartItems.forEach(item => {
+                dispatch(removeFromCart(item.id))
+            })
+            setOrderNumber(res.id)
+            setIsOrderComplite(true)
+        } catch(err) {
+            console.log(err)
+        }
+        setIsLoading(false);
+    }
     // закрыть корзину
     const onCartExit = () => {
         setCartOpened(false);
@@ -64,7 +74,7 @@ function Drawer({setCartOpened, cartOpened}) {
                                         <p>{obj.title}</p>
                                         <b>{obj.price} руб.</b>
                                     </div>
-                                    <img className={style.btnRemove} onClick={onRemoveItem} src={btnRemove} alt='remove' data-id={obj.id}/>
+                                    <img className={style.btnRemove} onClick={onRemoveItem} src={btnRemove} alt='remove' data-id={obj.id} />
                                 </div>
                             ))}
                         </div>
@@ -81,7 +91,7 @@ function Drawer({setCartOpened, cartOpened}) {
                                     <b>{Math.floor(totalPrice * 0.05)} руб. </b>
                                 </li>
                             </ul>
-                            <button className={style.greenButton} onClick={/*doOrder*/ () => {}} disabled={isLoading}>
+                            <button className={style.greenButton} onClick={doOrder} disabled={isLoading}>
                                 Оформить заказ
                                 <img src={arrow} alt="arrow" />
                             </button>

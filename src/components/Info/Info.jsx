@@ -1,5 +1,6 @@
 import React from 'react';
 import style from '../Drawer/Drawer.module.scss';
+import arrow from '../../assets/img/arrow.svg';
 
 function Info({ title, description, image, onCartExit }) {
     return (
@@ -9,7 +10,7 @@ function Info({ title, description, image, onCartExit }) {
             <p>{description}</p>
             <button className={style.greenButton} onClick={onCartExit}>
                 Вернуться назад
-                <img className={style.leftArrow} src="img/arrow.svg" alt="arrow" />
+                <img className={style.leftArrow} src={arrow} alt="arrow" />
             </button>
         </div>
     )

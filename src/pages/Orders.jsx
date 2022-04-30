@@ -1,27 +1,18 @@
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { API } from "../api/api";
 import Card from "../components/Card/Card";
+import { fetchOrders, ordersSelector } from "../redux/orderSlice";
 
 function Orders() {
 
-    const [orderItems, setOrderItems] = useState([]); // заказанные товары
-    const [isLoading, setIsLoading] = useState(false)
-
-    // получаем с сервера данные о сделанных заказах
-    async function fetchOrders() {
-        setIsLoading(true);
-        try {
-            const response = await API('get', '/orders');
-            setOrderItems(response.data)
-            setIsLoading(false);
-        } catch (err) {
-            console.log(err)
-        }
-    }
-
+    const orderItems = useSelector(ordersSelector.selectAll) // заказанные товары
+    const isLoading = useSelector(state => state.orders.loading) === 'loading'
+    const dispatch = useDispatch();
+    
     useEffect(() => {
-        fetchOrders()
-    }, [])
+        dispatch(fetchOrders())
+    }, [dispatch])
 
     return (
         <div className='content'>
@@ -32,16 +23,17 @@ function Orders() {
             {isLoading ?
                 [...Array(8)].map((item, index) =>
                     <div className="sneakers">
-                        <Card key={index} />
+                        <Card key={'order' + index} isLoading={isLoading} isOrder={true} />
                     </div>
                 ) : orderItems.map(item =>
                     <>
                         <h2>Заказ #{item.id}</h2>
                         <div className="sneakers">
-                            {item.order.map(obj =>
+                            {item.order.map((obj, index) =>
                                 <Card
-                                    key={obj.url}
+                                    key={obj.url + index}
                                     isOrder={true}
+                                    isLoading={isLoading}
                                     {...obj}
                                 />
                             )}
