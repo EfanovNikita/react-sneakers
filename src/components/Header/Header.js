@@ -1,7 +1,5 @@
 import style from './Header.module.scss';
 import { Link } from 'react-router-dom';
-import { useContext } from 'react';
-import AppContext from '../../context';
 import logo from '../../assets/img/logo.png';
 import cart from '../../assets/img/cart.svg';
 import heart from '../../assets/img/heart.svg';
@@ -9,7 +7,6 @@ import user from '../../assets/img/user.svg';
 
 
 function Header({cartItems, setCartOpened}) {
-    //const { cartItems, setCartOpened } = useContext(AppContext);
     const totalPrice = cartItems.reduce(((sum, obj) => sum + obj.price), 0);
 
     function openCart() {

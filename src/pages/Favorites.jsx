@@ -1,14 +1,9 @@
-import { useContext } from "react";
 import { useSelector } from "react-redux";
 import Card from "../components/Card/Card";
-import AppContext from "../context";
 import { cartSelector } from "../redux/cartSlice";
 import { favoriteSelector } from "../redux/favoriteSlice";
 
 function Favorites() {
-
-    //const { favoriteItems } = useContext(AppContext);
-
     const favoriteItems = useSelector(favoriteSelector.selectAll);
     const cartItems = useSelector(cartSelector.selectAll);
     const isLoading = useSelector(state => state.favorite.loading) === 'loading';

@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import Info from '../Info/Info';
 import style from './Drawer.module.scss';
 import completeOrder from '../../assets/img/complete-order.jpg';
@@ -11,7 +11,6 @@ import { postOrder } from '../../redux/orderSlice';
 
 function Drawer({ setCartOpened, cartOpened }) {
 
-    //const { /*setCartOpened,*/ onRemoveItem, /*cartItems*/ setCartItems, /*cartOpened*/ } = useContext(AppContext);
     const cartItems = useSelector(cartSelector.selectAll);
     const [isOrderComplite, setIsOrderComplite] = useState(false); //сделан(или нет) заказ
     const [isLoading, setIsLoading] = useState(false); // локальный показатель загрузки
@@ -21,17 +20,7 @@ function Drawer({ setCartOpened, cartOpened }) {
     // отправляем заказ на сервер и удаляем товары из корзины
     const doOrder = async () => {
         setIsLoading(true);
-       /* API('post', 'orders', { order: cartItems }).then(res => {
-            cartItems.forEach(item => {
-                API('delete', `cart/${item.id}`);
-            });
-            setCartItems([]);
-            setOrderNumber(res.data.id);
-            setIsOrderComplite(true);
-            setIsLoading(false);
-        }).catch(err => {
-            console.log(err)
-        })*/
+    
         try {
             const res = await dispatch(postOrder({ order: cartItems })).unwrap()
             cartItems.forEach(item => {

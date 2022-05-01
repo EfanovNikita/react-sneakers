@@ -1,4 +1,3 @@
-import React from 'react';
 import style from '../Drawer/Drawer.module.scss';
 import arrow from '../../assets/img/arrow.svg';
 

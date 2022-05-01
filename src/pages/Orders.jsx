@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { API } from "../api/api";
 import Card from "../components/Card/Card";
 import { fetchOrders, ordersSelector } from "../redux/orderSlice";
 
@@ -9,7 +8,7 @@ function Orders() {
     const orderItems = useSelector(ordersSelector.selectAll) // заказанные товары
     const isLoading = useSelector(state => state.orders.loading) === 'loading'
     const dispatch = useDispatch();
-    
+
     useEffect(() => {
         dispatch(fetchOrders())
     }, [dispatch])
