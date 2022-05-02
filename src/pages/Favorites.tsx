@@ -1,12 +1,12 @@
-import { useSelector } from "react-redux";
 import Card from "../components/Card/Card";
+import { useAppSelector } from "../hooks/appHooks";
 import { cartSelector } from "../redux/cartSlice";
 import { favoriteSelector } from "../redux/favoriteSlice";
 
 function Favorites() {
-    const favoriteItems = useSelector(favoriteSelector.selectAll);
-    const cartItems = useSelector(cartSelector.selectAll);
-    const isLoading = useSelector(state => state.favorite.loading) === 'loading';
+    const favoriteItems = useAppSelector(favoriteSelector.selectAll);
+    const cartItems = useAppSelector(cartSelector.selectAll);
+    const isLoading = useAppSelector(state => state.favorite.loading) === 'loading';
 
     return (
         <div className='content'>

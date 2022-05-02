@@ -1,20 +1,28 @@
 import { createSlice, createEntityAdapter, createAsyncThunk } from "@reduxjs/toolkit"
-import { API } from "../api/api"
+import { instance } from "../api/api"
+import { RootState } from "./store"
+import { Sneaker } from "../types"
 
-const orderAdapter = createEntityAdapter()
-const initialState = orderAdapter.getInitialState({ loading: 'loading', error: null })
-export const fetchOrders = createAsyncThunk(
+interface Order {
+    id: number,
+    order: Sneaker[]
+}
+
+const orderAdapter = createEntityAdapter<Order>()
+const initialState = orderAdapter.getInitialState({ loading: 'loading', error: null as string | null })
+
+export const fetchOrders = createAsyncThunk<Order[], void, { serializedErrorType: string }>(
     'orders/fetchOrders',
     async () => {
-        const res = await API('get', 'orders')
-        return res.data
+        const res = await instance.get('orders')
+        return res.data as Order[]
     }
 )
-export const postOrder = createAsyncThunk(
+export const postOrder = createAsyncThunk<Order, {order: Sneaker[]}, { serializedErrorType: string }>(
     'orders/doOrder',
     async (order) => {
-        const res = await API('post', 'orders', order)
-        return res.data
+        const res = await instance.post('orders', order)
+        return res.data as Order
     }
 )
 
@@ -42,7 +50,7 @@ const orderSlice = createSlice({
                 state.error = null
             })
             .addCase(postOrder.fulfilled, (state, action) => {
-                orderAdapter.setMany(state, action.payload)
+                orderAdapter.addOne(state, action.payload)
                 state.loading = 'idle'
                 state.error = null
             })
@@ -53,5 +61,5 @@ const orderSlice = createSlice({
     }
 })
 
-export const ordersSelector = orderAdapter.getSelectors(state => state.orders)
+export const ordersSelector = orderAdapter.getSelectors<RootState>(state => state.orders)
 export default orderSlice.reducer

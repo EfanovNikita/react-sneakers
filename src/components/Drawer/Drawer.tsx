@@ -1,26 +1,30 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import Info from '../Info/Info';
 import style from './Drawer.module.scss';
 import completeOrder from '../../assets/img/complete-order.jpg';
 import emptyCart from '../../assets/img/empty-cart.jpg';
 import btnRemove from '../../assets/img/btn-remove.svg';
 import arrow from '../../assets/img/arrow.svg';
-import { useDispatch, useSelector } from 'react-redux';
 import { cartSelector, removeFromCart } from '../../redux/cartSlice';
 import { postOrder } from '../../redux/orderSlice';
+import { useAppDispatch, useAppSelector } from '../../hooks/appHooks';
 
-function Drawer({ setCartOpened, cartOpened }) {
+type DrawerProps = {
+    cartOpened: boolean;
+    setCartOpened: (arg0: boolean) => void
+}
 
-    const cartItems = useSelector(cartSelector.selectAll);
-    const [isOrderComplite, setIsOrderComplite] = useState(false); //сделан(или нет) заказ
-    const [isLoading, setIsLoading] = useState(false); // локальный показатель загрузки
-    const [orderNumber, setOrderNumber] = useState(null); // номер заказа
-    const dispatch = useDispatch();
-    const totalPrice = cartItems.reduce(((sum, obj) => sum + obj.price), 0); //цена всех товаров в корзине
+const Drawer = ({ setCartOpened, cartOpened }: DrawerProps) => {
+
+    const cartItems = useAppSelector(cartSelector.selectAll)
+    const [isOrderComplite, setIsOrderComplite] = useState<boolean>(false) //сделан(или нет) заказ
+    const [isLoading, setIsLoading] = useState<boolean>(false) // локальный показатель загрузки
+    const [orderNumber, setOrderNumber] = useState<number | null>(null) // номер заказа
+    const dispatch = useAppDispatch()
+    const totalPrice = cartItems.reduce(((sum, obj) => sum + obj.price), 0) //цена всех товаров в корзине
     // отправляем заказ на сервер и удаляем товары из корзины
     const doOrder = async () => {
-        setIsLoading(true);
-    
+        setIsLoading(true)
         try {
             const res = await dispatch(postOrder({ order: cartItems })).unwrap()
             cartItems.forEach(item => {
@@ -31,16 +35,17 @@ function Drawer({ setCartOpened, cartOpened }) {
         } catch(err) {
             console.log(err)
         }
-        setIsLoading(false);
+        setIsLoading(false)
     }
     // закрыть корзину
     const onCartExit = () => {
-        setCartOpened(false);
-        setIsOrderComplite(false);
+        setCartOpened(false)
+        setIsOrderComplite(false)
     }
 
-    const onRemoveItem = (e) => {
-        dispatch(removeFromCart(e.target.dataset.id))
+    const onRemoveItem = (e: React.MouseEvent<HTMLImageElement>): void => {
+        const idOrder = Number(e.currentTarget.dataset.id)
+        dispatch(removeFromCart(idOrder))
     }
 
     return (

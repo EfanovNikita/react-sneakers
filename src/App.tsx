@@ -6,18 +6,17 @@ import Home from './pages/Home';
 import Favorites from './pages/Favorites';
 import Orders from './pages/Orders';
 import './index.scss';
-import { batch, useDispatch, useSelector } from 'react-redux';
-import { fetchItems, itemsSelector } from './redux/itemsSlice';
+import { batch } from 'react-redux';
+import { fetchItems } from './redux/itemsSlice';
 import { cartSelector, fetchCartItems } from './redux/cartSlice';
-import { favoriteSelector, fetchFavoriteItems } from './redux/favoriteSlice';
+import { fetchFavoriteItems } from './redux/favoriteSlice';
+import { useAppDispatch, useAppSelector } from './hooks/appHooks';
 
 function App() {
 
   const [cartOpened, setCartOpened] = useState(false); //корзина (открыта/закрыта)
-  const items = useSelector(itemsSelector.selectAll) // all items
-  const cartItems = useSelector(cartSelector.selectAll) // - cart items
-  const favoriteItems = useSelector(favoriteSelector.selectAll) //- favorite items
-  const dispatch = useDispatch()
+  const cartItems = useAppSelector(cartSelector.selectAll) // - cart items
+  const dispatch = useAppDispatch()
 
 
   useEffect(() => {

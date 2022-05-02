@@ -1,28 +1,37 @@
 import style from './Card.module.scss';
 import ContentLoader from "react-content-loader";
-import { useDispatch, useSelector } from 'react-redux';
 import { addToCart, cartSelector, removeFromCart } from '../../redux/cartSlice';
 import { addToFavorite, favoriteSelector, removeFromFavorite } from '../../redux/favoriteSlice';
 import btnChecked from '../../assets/img/btn-checked.svg';
 import btnPlus from '../../assets/img/btn-plus.svg';
 import like from '../../assets/img/liked.svg';
 import unliked from '../../assets/img/unliked.svg';
+import { useAppDispatch, useAppSelector } from '../../hooks/appHooks';
+import { Sneaker } from '../../types';
 
+type CardProps = {
+    url?: string;
+    title?: string;
+    price?: number;
+    isOrder?: boolean;
+    isAddedItem?: boolean;
+    isFavorited?: boolean;
+    isLoading?: boolean;
+}
 
+function Card({url = '', title = '', price = 0, isOrder = false, isAddedItem = false, isFavorited = false, isLoading = false }: CardProps) {
 
-function Card({url, title, price, isOrder = false, isAddedItem = false, isFavorited = false, isLoading = false }) {
-
-    const dispatch = useDispatch();
-    const cartItems = useSelector(cartSelector.selectAll);
-    const favoriteItems = useSelector(favoriteSelector.selectAll);
+    const dispatch = useAppDispatch()
+    const cartItems = useAppSelector(cartSelector.selectAll)
+    const favoriteItems = useAppSelector(favoriteSelector.selectAll)
     // добваить товар в корзину
     const onClickPlus = () => {
         dispatch(addToCart({ url, title, price }))
     }
     // удалить товар из корзины
     const deleteFromCart = () => {
-        const itemId = cartItems.find(item => item.url === url).id
-        dispatch(removeFromCart(itemId))
+        const item = cartItems.find(item => item.url === url) as Sneaker
+        dispatch(removeFromCart(item.id))
     }
     // добавить товар в избранное
     const onClickFavorite = () => {
@@ -30,8 +39,8 @@ function Card({url, title, price, isOrder = false, isAddedItem = false, isFavori
     }
     // удалить товар из избранных
     const deleteFromFavorite = () => {
-        const itemId = favoriteItems.find(item => item.url === url).id
-        dispatch(removeFromFavorite(itemId))
+        const item = favoriteItems.find(item => item.url === url) as Sneaker
+        dispatch(removeFromFavorite(item.id))
     }
 
     return (

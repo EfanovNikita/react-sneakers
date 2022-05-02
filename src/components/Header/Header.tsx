@@ -4,9 +4,14 @@ import logo from '../../assets/img/logo.png';
 import cart from '../../assets/img/cart.svg';
 import heart from '../../assets/img/heart.svg';
 import user from '../../assets/img/user.svg';
+import { Sneaker } from '../../types';
 
+type HeaderProps = {
+    cartItems: Sneaker[];
+    setCartOpened: (arg0: boolean) => void
+}
 
-function Header({cartItems, setCartOpened}) {
+const Header = ({cartItems, setCartOpened}: HeaderProps) => {
     const totalPrice = cartItems.reduce(((sum, obj) => sum + obj.price), 0);
 
     function openCart() {

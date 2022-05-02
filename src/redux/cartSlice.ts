@@ -1,28 +1,31 @@
 import { createSlice, createEntityAdapter, createAsyncThunk } from "@reduxjs/toolkit"
-import { API } from "../api/api"
+import { instance } from "../api/api"
+import { Sneaker, Item } from "../types"
+import { RootState } from "./store"
 
-const cartAdapter = createEntityAdapter()
-const initialState = cartAdapter.getInitialState({ loading: 'idle', error: null })
-export const fetchCartItems = createAsyncThunk(
+const cartAdapter = createEntityAdapter<Sneaker>()
+const initialState = cartAdapter.getInitialState({ loading: 'idle', error: null as string | null })
+
+export const fetchCartItems = createAsyncThunk<Sneaker[], void, { serializedErrorType: string }>(
     'cartSneakers/fetchItems',
     async () => {
-        const res = await API('get', 'cart')
-        return res.data
+        const res = await instance.get('cart')
+        return res.data as Sneaker[]
     }
 )
 
-export const addToCart = createAsyncThunk(
+export const addToCart = createAsyncThunk<Sneaker, Item, { serializedErrorType: string }>(
     'cartSneakers/addToCart',
     async (item) => {
-        const res = await API('post', 'cart', item)
-        return res.data
+        const res = await instance.post('cart', item)
+        return res.data as Sneaker
     }
 )
 
-export const removeFromCart = createAsyncThunk(
+export const removeFromCart = createAsyncThunk<Sneaker, number, { serializedErrorType: string }>(
     'cartSneakers/removeFromCart',
     async (id) => {
-        const res = await API('delete', `cart/${id}`)
+        const res = await instance.delete(`cart/${id}`)
         return res.data
     }
 )
@@ -30,9 +33,7 @@ export const removeFromCart = createAsyncThunk(
 const cartSlice = createSlice({
     name: 'cartSneakers',
     initialState,
-    reducers: {
-        addOne: cartAdapter.addOne
-    },
+    reducers: {},
     extraReducers: (builder) => {
         builder
             .addCase(fetchCartItems.pending, state => {
@@ -77,5 +78,5 @@ const cartSlice = createSlice({
     }
 })
 
-export const cartSelector = cartAdapter.getSelectors(state => state.cart)
+export const cartSelector = cartAdapter.getSelectors<RootState>(state => state.cart)
 export default cartSlice.reducer

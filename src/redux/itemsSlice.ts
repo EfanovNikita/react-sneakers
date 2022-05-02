@@ -1,13 +1,16 @@
 import { createSlice, createEntityAdapter, createAsyncThunk } from "@reduxjs/toolkit"
-import { API } from "../api/api"
+import { RootState } from "./store"
+import type { Sneaker } from '../types';
+import { instance } from "../api/api";
 
-const itemsAdapter = createEntityAdapter()
-const initialState = itemsAdapter.getInitialState({ loading: 'idle', error: null })
-export const fetchItems = createAsyncThunk(
+const itemsAdapter = createEntityAdapter<Sneaker>()
+const initialState = itemsAdapter.getInitialState({ loading: 'idle', error: null as string | null })
+
+export const fetchItems = createAsyncThunk<Sneaker[], void, { serializedErrorType: string }>(
     'allSneakers/fetchItems',
     async () => {
-        const res = await API('get', 'items')
-        return res.data
+        const res = await instance.get('items')
+        return res.data as Sneaker[]
     }
 )
 
@@ -33,5 +36,5 @@ const itemsSlice = createSlice({
     }
 })
 
-export const itemsSelector = itemsAdapter.getSelectors(state => state.items)
+export const itemsSelector = itemsAdapter.getSelectors<RootState>(state => state.items)
 export default itemsSlice.reducer

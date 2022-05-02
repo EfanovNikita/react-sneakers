@@ -1,24 +1,24 @@
-import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState } from 'react';
 import Card from '../components/Card/Card';
 import { itemsSelector } from '../redux/itemsSlice';
 import { cartSelector } from '../redux/cartSlice';
 import { favoriteSelector } from '../redux/favoriteSlice';
 import searchImg from '../assets/img/search.svg';
 import btnRemove from '../assets/img/btn-remove.svg';
+import { useAppSelector } from '../hooks/appHooks';
 
 function Home() {
 
     const [searchValue, setSearchValue] = useState('');
-    const items = useSelector(itemsSelector.selectAll);
-    const cartItems = useSelector(cartSelector.selectAll);
-    const favoriteItems = useSelector(favoriteSelector.selectAll);
-    const itemsIsLoading = useSelector(state => state.items.loading) === 'loading';
-    const cartIsLoading = useSelector(state => state.cart.loading) === 'loading';
-    const favoriteIsLoading = useSelector(state => state.favorite.loading) === 'loading';
+    const items = useAppSelector(itemsSelector.selectAll);
+    const cartItems = useAppSelector(cartSelector.selectAll);
+    const favoriteItems = useAppSelector(favoriteSelector.selectAll);
+    const itemsIsLoading = useAppSelector(state => state.items.loading) === 'loading';
+    const cartIsLoading = useAppSelector(state => state.cart.loading) === 'loading';
+    const favoriteIsLoading = useAppSelector(state => state.favorite.loading) === 'loading';
     const allIsLoading = itemsIsLoading && favoriteIsLoading && cartIsLoading;
 
-    const onChangeSearchValue = (e) => {
+    const onChangeSearchValue = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchValue(e.target.value)
     }
 
@@ -31,7 +31,7 @@ function Home() {
                     const isFavorited = Boolean(favoriteItems?.find(favoriteItem => favoriteItem.url === item.url))
                     return <Card
                         key={index}
-                        isLoading = {itemsIsLoading}
+                        isLoading = {allIsLoading}
                         isAddedItem={isAddedItem}
                         isFavorited={isFavorited}
                         {...item}

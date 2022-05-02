@@ -1,7 +1,14 @@
 import style from '../Drawer/Drawer.module.scss';
 import arrow from '../../assets/img/arrow.svg';
 
-function Info({ title, description, image, onCartExit }) {
+type InfoProps = {
+    title: string;
+    description: string;
+    image: string;
+    onCartExit: ()=>void;
+}
+
+const Info = ({ title, description, image, onCartExit }: InfoProps) => {
     return (
         <div className={style.cartEmpty}>
             <img className={style.cartImg} src={image} alt="empty-cart" />

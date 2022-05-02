@@ -1,13 +1,13 @@
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import Card from "../components/Card/Card";
+import { useAppSelector, useAppDispatch } from "../hooks/appHooks";
 import { fetchOrders, ordersSelector } from "../redux/orderSlice";
 
 function Orders() {
 
-    const orderItems = useSelector(ordersSelector.selectAll) // заказанные товары
-    const isLoading = useSelector(state => state.orders.loading) === 'loading'
-    const dispatch = useDispatch();
+    const orderItems = useAppSelector(ordersSelector.selectAll) // заказанные товары
+    const isLoading = useAppSelector(state => state.orders.loading) === 'loading'
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
         dispatch(fetchOrders())
